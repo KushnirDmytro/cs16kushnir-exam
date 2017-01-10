@@ -1,6 +1,6 @@
 package app;
 
-import domain.*;
+import domain.BasicStudent;
 import json.*;
 
 /**
@@ -32,9 +32,37 @@ public class JSONApp {
         System.out.println(json.toJson());
     }
 
+
     public static JsonObject sessionResult() {
-        JsonObject jsonObject = null;
-        // ToDo
-        return jsonObject;
+
+        Json jYear = new JsonNumber(2);
+        print(jYear); // 2
+
+        Json jExams = new JsonArray(
+                new JsonObject(
+                        new JsonPair("course", new JsonString("OOP")),
+                        new JsonPair("mark", new JsonNumber(3)),
+                        new JsonPair("passed", new JsonBoolean(true))
+                ),
+                new JsonObject(
+                        new JsonPair("course", new JsonString("English")),
+                        new JsonPair("mark", new JsonNumber(5)),
+                        new JsonPair("passed", new JsonBoolean(true))
+                ),
+                new JsonObject(
+                        new JsonPair("course", new JsonString("Math")),
+                        new JsonPair("mark", new JsonNumber(2)),
+                        new JsonPair("passed", new JsonBoolean(false))
+                )
+        );
+
+        print(jExams);
+        JsonPair name = new JsonPair("name", new JsonString("Andrii"));
+        JsonPair surname = new JsonPair("surname", new JsonString("Rodionov"));
+        JsonPair year = new JsonPair("year", jYear);
+        JsonPair exams = new JsonPair("exams", jExams);
+        JsonObject jsonObj = new JsonObject(name, surname, year, exams);
+
+        return jsonObj;
     }
 }

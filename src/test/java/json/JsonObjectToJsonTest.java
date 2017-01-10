@@ -69,6 +69,8 @@ public class JsonObjectToJsonTest {
 
         String expectedJSON = "{'name': 'Anna', 'age': 20, 'status': null}";
 
+        System.out.println(jsonObject.toJson());
+
         JSONAssert.assertEquals(expectedJSON, jsonObject.toJson(), true);
     }
 }
