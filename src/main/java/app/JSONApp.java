@@ -61,8 +61,7 @@ public class JSONApp {
         JsonPair surname = new JsonPair("surname", new JsonString("Rodionov"));
         JsonPair year = new JsonPair("year", jYear);
         JsonPair exams = new JsonPair("exams", jExams);
-        JsonObject jsonObj = new JsonObject(name, surname, year, exams);
 
-        return jsonObj;
+        return new JsonObject(name, surname, year, exams);
     }
 }

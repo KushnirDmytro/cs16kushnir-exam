@@ -1,18 +1,18 @@
 package json;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.security.KeyStore;
+import java.util.*;
 
 /**
  * Created by Andrii_Rodionov on 1/3/2017.
  */
 public class JsonObject extends Json {
 
-    private ArrayList<JsonPair> jsonPairs;
+    private Map<String, Json> jsonMap;
 
 
     public JsonObject(JsonPair... jsonPairs) {
-        this.jsonPairs = new ArrayList<JsonPair>();
+        this.jsonMap = new HashMap<String, Json>();
         for (JsonPair newPair : jsonPairs) {
             this.add(newPair);
         }
@@ -25,11 +25,13 @@ public class JsonObject extends Json {
 
     private String getJsonObjBody() {
         StringBuilder jsonStr = new StringBuilder();
-        Iterator<JsonPair> jsonPairsIterator = jsonPairs.iterator();
-        while (jsonPairsIterator.hasNext()) {
-            JsonPair jsonPair = jsonPairsIterator.next();
-            jsonStr.append(jsonPair.key + ": " + jsonPair.value.toJson());
-            if (jsonPairsIterator.hasNext()) {
+        Set<String>jsonKeys = jsonMap.keySet();
+        Iterator<String> jKeyIter = jsonKeys.iterator();
+        String key;
+        while (jKeyIter.hasNext()) {
+            key = jKeyIter.next();
+            jsonStr.append(key + ": " + jsonMap.get(key).toJson());
+            if (jKeyIter.hasNext()) {
                 jsonStr.append(", ");
             }
         }
@@ -37,51 +39,26 @@ public class JsonObject extends Json {
     }
 
     public void add(JsonPair jsonPair) {
-        int possibleTwinIndex = this.findIndex(jsonPair.key);
-        if (possibleTwinIndex == -1) {
-            this.jsonPairs.add(jsonPair);
-        } else {
-            this.jsonPairs.set(possibleTwinIndex, jsonPair); //overwiting existing val
-        }
+        jsonMap.put(jsonPair.key, jsonPair.value);
     }
-
-    public int findIndex(String name) {
-        int iter = 0;
-        for (JsonPair jsonPair : this.jsonPairs) {
-            if (jsonPair.key.equals(name)) {
-                return iter;
-            }
-            ++iter;
-        }
-        return -1;
-    }
-
 
     public Json find(String name) {
-        for (JsonPair jsonPair : this.jsonPairs) {
-            if (jsonPair.key.equals(name)) {
-                return jsonPair.value;
-            }
-        }
-        return null;
+        return this.jsonMap.get(name);
     }
 
     public boolean contains(String name) {
-        return (this.find(name) != null);
+        return this.jsonMap.containsKey(name);
     }
 
     public JsonObject projection(String... names) {
-        ArrayList<JsonPair> res = new ArrayList<>();
-        int indx;
+        List<JsonPair> res = new ArrayList<>();
         for (String name : names) {
-            indx = this.findIndex(name);
-            if (indx != -1) {
-                res.add(this.jsonPairs.get(indx));
+            if (this.contains(name)){
+                res.add(new JsonPair(name, jsonMap.get(name)) );
             }
         }
 
         return new JsonObject(res.toArray(new JsonPair[]{}));
-
 
     }
 }
